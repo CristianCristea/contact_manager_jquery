@@ -1,3 +1,20 @@
 // ==========================================================================
 // $Section Results
 // ==========================================================================
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @media all and (max-width: $tablet-small) {
+    padding: 0;
+  }
+}
+
+// jumbotron
+.jumbotron {
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-top-right-radius: 0 !important;
+  border-top-left-radius: 0 !important;
+}

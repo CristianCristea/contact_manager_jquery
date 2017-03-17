@@ -1,0 +1,33 @@
+// ==========================================================================
+// $Buttons
+// ==========================================================================
+
+// contact btn
+.btn-default {
+  color: tomato;
+  border-color: tomato;
+  transition: all .35s;
+
+  &:hover {
+    color: #fff;
+    background-color: tomato;
+    border-color: tomato;
+  }
+}
+
+// search
+input[type="search"] {
+  font-size: 1.6rem;
+  border: 1px solid tomato;
+  border-radius: 6px;
+  padding: 10px;
+
+  &:focus {
+    outline: none;
+    border-width: 2px;
+  }
+
+  @media all and (max-width: $tablet-large) {
+    margin-top: 1rem;
+  }
+}
