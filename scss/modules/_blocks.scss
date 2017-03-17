@@ -1,0 +1,40 @@
+// ==========================================================================
+// Contact block
+// ==========================================================================
+
+.contact-block {
+  border-bottom: 1px solid tomato;
+  padding-bottom: 2rem;
+
+  .name {
+    padding-bottom: 1rem;
+    font-weight: $font-weight-semibold;
+  }
+
+  .heading-small {
+    font-weight: $font-weight-semibold;
+    font-size: 1.6rem;
+    margin-bottom: .5rem;
+  }
+
+  p {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .contact-buttons {
+    .edit,
+    .delete {
+      width: 100%;
+      margin-bottom: 1rem;
+
+      @media all and (min-width: $tablet-small) {
+        width: 49%;
+      }
+
+      i {
+        padding-right: 1rem;
+      }
+    }
+  }
+}
