@@ -1,5 +1,5 @@
 {
-  "name": "Contact Manager",
+  "name": "contact_manager",
   "version": "1.0.0",
   "description": "A webapp for organizing contacts",
   "main": "index.html",
