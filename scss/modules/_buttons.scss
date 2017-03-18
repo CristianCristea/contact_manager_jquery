@@ -8,11 +8,17 @@
   border-color: tomato;
   transition: all .35s;
 
-  &:hover {
-    color: #fff;
-    background-color: tomato;
-    border-color: tomato;
+  &:hover,
+  &:focus,
+  &:active {
+    color: #fff !important;
+    background-color: tomato !important;
+    border-color: tomato !important;
+    outline: 0 !important;
+    box-shadow: none;
   }
+
+
 }
 
 // search
