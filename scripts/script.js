@@ -18,5 +18,24 @@ $(function() {
     $('main').slideDown(400);
     $('.add-contact-form').slideUp(300);
   });
-});
 
+   $('.add-contact-form form').submit(function(e) {
+      e.preventDefault();
+      var contactTemplate = $('#contact').html();
+      var contact = $(this).serializeArray();
+      var templateFunction = Handlebars.compile(contactTemplate);
+      var html_code = templateFunction({contact: contact}); 
+      console.log(html_code);
+      $('#contacts').append(html_code);
+
+      $('main').slideDown(400);
+      $('.add-contact-form').slideUp(300);
+
+      $(this).find('input').val('');
+   });
+
+   // todo
+   // implement delete - get ul elem - identify index remove from DOM
+   // implement edit - get data from li, recall form prepopulated with data, rerewrite li
+   // implement search get all names - array, get input search, check with the array elem, return match
+});
