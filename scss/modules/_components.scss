@@ -3,9 +3,12 @@
 // ==========================================================================
 
 .container-form {
-  max-width: 500px;
+  max-width: 90%;
   margin: 0 auto;
 
+  @media all and (min-width: $tablet-large) {
+    max-width: 500px;
+  }
   label,
   input {
     font-size: 1.8rem;
@@ -22,6 +25,7 @@
 
   button {
     font-size: 1.8rem;
+    margin-bottom: 1rem;
   }
 }
 

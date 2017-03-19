@@ -6,6 +6,10 @@
   border-bottom: 1px solid tomato;
   padding-bottom: 2rem;
 
+  @media all and (min-width: $tablet-large) {
+     margin-left: 3rem;
+  }
+
   .name {
     padding-bottom: 1rem;
     font-weight: $font-weight-semibold;
