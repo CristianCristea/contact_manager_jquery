@@ -1,5 +1,5 @@
 # Readme - Contact Manager
+Learning Side Project
 
-1. npm init
-2. gulp for dev
-3. gulp --env=prod for dist
+Manage contacts.
+Add, edit, delete, search and store in localStorage functionality.
