@@ -1,22 +1,45 @@
-// create form template
-// add form on click
-// get form data // serializeArray
-// create contact template
-  // loop through the array - handlebars - to fill the vars
-// on form submit append the new created contact
-// todo use localStorage
-
+// todo
+// localStorage
 var app = {
+  // basic validation for no input
+  validation: function(elem) {
+    return !!elem.length;
+  },
+
+  displayElem: function(names_array) {
+    $('li').each(function(index, li, lis) {
+      if (names_array.indexOf($(this).find('.name').text().toLowerCase()) === -1) {
+        $(this).hide();
+      } else {
+        $(this).show();
+      }
+    });
+  },
+
+  identifyKey: function(e) {
+    return (e.which >= 97 && e.which <= 122);
+  },
+
+  searchName: function (array, string_to_search) {
+    var searchString = function(string) {
+      var temp_string = string.slice(0, string_to_search.length);
+      return temp_string === string_to_search;
+    }; 
+    return array.filter(searchString);
+  },
+
   showForm: function() {
     $('main').slideUp(300);
     $('.add-contact-form').slideDown(400);
   },
+
   hideForm: function() {
     $('main').slideDown(400);
     $('.add-contact-form').slideUp(300);
   },
+
   getContactData: function(e) {
-    // implement edit - get data from li, recall form prepopulated with data, rerewrite li
+    // implement edit - get data from li, recall form, prepopulate form with data
     var $li = $(e.currentTarget).closest('li');
     var nameData = $li.find('.name').text();
     var emailData = $li.find('.email').text();
@@ -28,6 +51,7 @@ var app = {
     $('#current_id').attr('data-id', $li.attr("data-id"));
     this.showForm();
   },
+
   editContact: function(e, id) {
     e.preventDefault();
     var $li = $('li').filter(function() {
@@ -42,33 +66,46 @@ var app = {
     $li.find('.email').text(emailData); 
     $li.find('.address').text(addressData); 
   },
+
   deleteContact: function(e, id) {
     var $li = $('li').filter(function() {
       return ($(this).attr('data-id') == id);
     });
     $li.remove();
   },
+
   clearForm: function(e) {
     $(e.target).find('input').not(':hidden').val('');
     $(e.target).removeClass("editing");
   },
+
   newContact: function() {
     var contactTemplate = $('#contact').html();
     var contact = $('.add-contact-form form').serializeArray();
     var templateFunction = Handlebars.compile(contactTemplate);
     var html_code = templateFunction({contact: contact}); 
     $('#contacts').append(html_code);
-    // console.log(contact);
   },
+
   incrementId: function(id) {
     return Number(++id);
   },
+
   init: function() {
     var self = this;
     var $form =  $('.add-contact-form form');
 
     $('#add_contact_btn').on('click', this.showForm);
     $('button[type="reset"]').on('click', this.hideForm);
+
+    // basic validation
+    $form.find('input').on('blur', function() {
+      if (!self.validation($(this).val())) { 
+        $('[type="submit"]').prop("disabled", true);
+      } else {
+        $('[type="submit"]').prop("disabled", false);
+      }
+    });
 
     $form.submit(function(e) {
       e.preventDefault();
@@ -93,9 +130,23 @@ var app = {
       var id = $(e.currentTarget).closest('li').attr('data-id');
       self.deleteContact(e, id);
     });
+
+    $('input[type="search"]').on('keyup', function(e) {
+      var selectedNames;
+      if (self.identifyKey) {
+        var names = [];
+        $('li').map(function() {
+          names.push($(this).find('.name').text().toLowerCase());
+        });
+
+        selectedNames = self.searchName(names, $(this).val().toLowerCase());
+      } else {
+        return false;
+      }
+      
+      self.displayElem(selectedNames);
+    });
   }
 };
 
-$(function() {
-  app.init();
-});
+$(function() { app.init(); });
