@@ -23,8 +23,6 @@ var app = {
     localStorage.setItem(item, JSON.stringify(newObject));
   },
 
-  deleteContactFromStorage: function() {},
-
   getContactFromStorage: function(id) {
     return JSON.parse(localStorage.getItem('contact' + id));
   },
@@ -76,16 +74,28 @@ var app = {
   },
 
   // update obj prop, return obj with name, email, address, id
-  updateContact: function(contact) {
+  updateContactInStorage: function(contact) {
     contact.name = $('#name').val();
     contact.email = $('#email').val();
     contact.address = $('#address').val();
     return contact;
   },
 
+  updateContactView: function(id) {
+    var $li = $('li[data-id="' + id + '"]');
+    var nameData = $('#name').val();
+    var emailData = $('#email').val();
+    var addressData = $('#address').val();
+
+    $li.find('.name').text(nameData);
+    $li.find('.email').text(emailData);
+    $li.find('.address').text(addressData);
+    console.log("updated");
+  },
+
   editContact: function(id) {
     var contact = this.getContactFromStorage(id);
-    var newContact = this.updateContact(contact);
+    var newContact = this.updateContactInStorage(contact);
     this.commitToStorage(id, newContact);
   },
 
@@ -156,6 +166,7 @@ var app = {
       if ( $form.hasClass("editing")) {
         var li_id = $('#current_id').attr('data-id');
         self.editContact(li_id);
+        self.updateContactView(li_id);
       } else {
         $('input[type="hidden"]').val(self.incrementId(form_id));
         var id =  $('input[type="hidden"]').val();
