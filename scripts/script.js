@@ -1,9 +1,32 @@
-// todo
-// localStorage
 var app = {
-  // basic validation for no input
-  validation: function(elem) {
-    return !!elem.length;
+  // create contact object constructor
+  CreateContact: function(name, email, address, id) {
+    this.name = name;
+    this.email = email;
+    this.address = address;
+    this.id = id;
+  },
+
+  createNewContact: function(name, email, address, id) {
+    var createdContact = new this.CreateContact(name, email, address, id);
+    localStorage.setItem('contactCount', createdContact.id); 
+    var contactsSize = localStorage.contactCount;
+    this.commitToStorage(contactsSize, createdContact);
+  },
+
+  commitToStorage: function(objectCount, newObject) {
+    // the unique key
+    var item = 'contact' + objectCount;
+    localStorage.setItem('contactCount', objectCount);
+
+    // store the object
+    localStorage.setItem(item, JSON.stringify(newObject));
+  },
+
+  deleteContactFromStorage: function() {},
+
+  getContactFromStorage: function(id) {
+    return JSON.parse(localStorage.getItem('contact' + id));
   },
 
   displayElem: function(names_array) {
@@ -52,19 +75,18 @@ var app = {
     this.showForm();
   },
 
-  editContact: function(e, id) {
-    e.preventDefault();
-    var $li = $('li').filter(function() {
-    return ($(this).attr('data-id') == id);
-    });
-    var $form = $('.add-contact-form form');
-    var nameData = $form.find('#name').val();
-    var emailData = $form.find('#email').val();
-    var addressData = $form.find('#address').val();
+  // update obj prop, return obj with name, email, address, id
+  updateContact: function(contact) {
+    contact.name = $('#name').val();
+    contact.email = $('#email').val();
+    contact.address = $('#address').val();
+    return contact;
+  },
 
-    $li.find('.name').text(nameData); 
-    $li.find('.email').text(emailData); 
-    $li.find('.address').text(addressData); 
+  editContact: function(id) {
+    var contact = this.getContactFromStorage(id);
+    var newContact = this.updateContact(contact);
+    this.commitToStorage(id, newContact);
   },
 
   deleteContact: function(e, id) {
@@ -72,6 +94,7 @@ var app = {
       return ($(this).attr('data-id') == id);
     });
     $li.remove();
+    localStorage.removeItem("contact" + id);
   },
 
   clearForm: function(e) {
@@ -79,12 +102,26 @@ var app = {
     $(e.target).removeClass("editing");
   },
 
-  newContact: function() {
+  newContact: function(name, email, address, id) {
+   this.createNewContact(name, email, address, id);
+  },
+
+  renderContact: function(id) {
     var contactTemplate = $('#contact').html();
-    var contact = $('.add-contact-form form').serializeArray();
+    var single_contact = this.getContactFromStorage(id); 
     var templateFunction = Handlebars.compile(contactTemplate);
-    var html_code = templateFunction({contact: contact}); 
+    var html_code = templateFunction({contact: single_contact}); 
     $('#contacts').append(html_code);
+  },
+
+// check if contact valid
+
+  renderContacts: function(storage) {
+    for (var i = 1; i <= +(storage.getItem('contactCount')); i++) {
+      if (this.getContactFromStorage(i)) {
+        this.renderContact(i);
+      }
+    }
   },
 
   incrementId: function(id) {
@@ -94,30 +131,37 @@ var app = {
   init: function() {
     var self = this;
     var $form =  $('.add-contact-form form');
+    var $submit_btn = $('[type="submit"]');
 
-    $('#add_contact_btn').on('click', this.showForm);
-    $('button[type="reset"]').on('click', this.hideForm);
+    if (localStorage.length !== 0) {
+      $('input[type="hidden"]').val(localStorage.getItem('contactCount'));
+    }
 
-    // basic validation
-    $form.find('input').on('blur', function() {
-      if (!self.validation($(this).val())) { 
-        $('[type="submit"]').prop("disabled", true);
-      } else {
-        $('[type="submit"]').prop("disabled", false);
-      }
+    $('#add_contact_btn').on('click', function(e) {
+      self.showForm();
+    });
+
+    $('button[type="reset"]').on('click', function(e) {
+      self.hideForm();
+      $form.removeClass('editing');
     });
 
     $form.submit(function(e) {
       e.preventDefault();
       var form_id = $('input[type="hidden"]').val();
-      var li_id = $form.find('#current_id').attr('data-id');
+      var name = $('#name').val();
+      var email = $('#email').val();
+      var address = $('#address').val();
 
       if ( $form.hasClass("editing")) {
-        self.editContact(e, li_id);
+        var li_id = $('#current_id').attr('data-id');
+        self.editContact(li_id);
       } else {
         $('input[type="hidden"]').val(self.incrementId(form_id));
-        self.newContact(e);
-      } 
+        var id =  $('input[type="hidden"]').val();
+        self.newContact(name, email, address, id);
+        self.renderContact(id);
+      }
       self.hideForm();
       self.clearForm(e);
     });
@@ -146,6 +190,8 @@ var app = {
       
       self.displayElem(selectedNames);
     });
+    
+    self.renderContacts(localStorage);
   }
 };
 
