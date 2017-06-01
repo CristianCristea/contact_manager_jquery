@@ -29,10 +29,11 @@ var app = {
 
   displayElem: function(names_array) {
     $('li').each(function(index, li, lis) {
-      if (names_array.indexOf($(this).find('.name').text().toLowerCase()) === -1) {
-        $(this).hide();
+      var $this = $(this);
+      if (names_array.indexOf($this.find('.name').text().toLowerCase()) === -1) {
+        $this.hide();
       } else {
-        $(this).show();
+        $this.show();
       }
     });
   },
@@ -62,13 +63,13 @@ var app = {
   getContactData: function(e) {
     // implement edit - get data from li, recall form, prepopulate form with data
     var $li = $(e.currentTarget).closest('li');
-    var nameData = $li.find('.name').text();
-    var emailData = $li.find('.email').text();
-    var addressData = $li.find('.address').text();
+    var name_data = $li.find('.name').text();
+    var email_data = $li.find('.email').text();
+    var address_data = $li.find('.address').text();
     $('.add-contact-form form').addClass("editing");
-    $('#name').val(nameData);
-    $('#email').val(emailData);
-    $('#address').val(addressData);
+    $('#name').val(name_data);
+    $('#email').val(email_data);
+    $('#address').val(address_data);
     $('#current_id').attr('data-id', $li.attr("data-id"));
     this.showForm();
   },
@@ -83,20 +84,20 @@ var app = {
 
   updateContactView: function(id) {
     var $li = $('li[data-id="' + id + '"]');
-    var nameData = $('#name').val();
-    var emailData = $('#email').val();
-    var addressData = $('#address').val();
+    var name_data = $('#name').val();
+    var email_data = $('#email').val();
+    var address_data = $('#address').val();
 
-    $li.find('.name').text(nameData);
-    $li.find('.email').text(emailData);
-    $li.find('.address').text(addressData);
+    $li.find('.name').text(name_data);
+    $li.find('.email').text(email_data);
+    $li.find('.address').text(address_data);
     console.log("updated");
   },
 
   editContact: function(id) {
     var contact = this.getContactFromStorage(id);
-    var newContact = this.updateContactInStorage(contact);
-    this.commitToStorage(id, newContact);
+    var new_contact = this.updateContactInStorage(contact);
+    this.commitToStorage(id, new_contact);
   },
 
   deleteContact: function(e, id) {
@@ -187,19 +188,19 @@ var app = {
     });
 
     $('input[type="search"]').on('keyup', function(e) {
-      var selectedNames;
+      var selected_names;
       if (self.identifyKey) {
         var names = [];
         $('li').map(function() {
           names.push($(this).find('.name').text().toLowerCase());
         });
 
-        selectedNames = self.searchName(names, $(this).val().toLowerCase());
+        selected_names = self.searchName(names, $(this).val().toLowerCase());
       } else {
         return false;
       }
       
-      self.displayElem(selectedNames);
+      self.displayElem(selected_names);
     });
     
     self.renderContacts(localStorage);
