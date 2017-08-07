@@ -39,7 +39,7 @@ var app = {
   },
 
   identifyKey: function(e) {
-    return (e.which >= 97 && e.which <= 122);
+    return (e.which >= 97 && e.which <= 122 || e.which >= 65 && e.which <= 90);
   },
 
   searchName: function (array, string_to_search) {
